@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylsheet" href="style.css">
+    <title>Car Price Prediction</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+</head>
+<body style="background-size: cover;background-color: rgb(238, 213, 182);">
+
+    <h1 style="margin-left: 400px;color: darkorchid;margin-top: 30px;">Welcome to Car Price Prediction</h1>
+  
+    <br>
+<!---------------------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------------------->
+<form name="Modelform",id="Modelform">
+
+    <div style="margin-left: 400px;margin-top: 0px;justify-content: space-between; 
+    background-color: rgb(167, 230, 224);width: 700px;height: 700px;padding:40px;">
+
+<!---------------------------------------------------------------------------------------->
+
+
+<center>
+<div style="font-size: 25px;margin: 30px;margin-top:20px;">
+    <label style="text-align: center;">select car company</label>
+   <br>
+
+    <select style="margin-top:20px;width: 300px;height: 25px;"id="company"
+
+     name="company" required="1"
+     
+    onchange="load_car_models(this.id,'car_models')">
+    
+        {%for company in companies%}
+
+    <option value="{{company}}">{{company}}</option>
+
+    {%endfor%}
+    
+    </select>
+</div>
+
+
+<!---------------------------------------------------------------------------------------->
+
+
+<div style="font-size: 25px;margin: 30px;">
+    <label style="text-align: center;" >select car model</label>
+   <br>
+    <select style="margin-top:20px;width: 300px;height: 25px;"
+    id="car_models" name="car_models" required="1">
+  
+    </select>
+    <br>
+    
+
+</div>
+
+
+<!---------------------------------------------------------------------------------------->
+
+
+
+<div style="margin: 30px;">
+   
+ <label style="font-size: 25px;text-align: center;font-size: 25px;;">select car fuel type</label>
+ <br>
+ <select style="margin-top:20px;width: 300px;height: 25px;"name=fuel_type2>
+
+    {%for fuel_type1 in fuel_type%}
+
+    <option value="{{fuel_type1}}">{{fuel_type1}}</option>
+
+    {%endfor%}
+
+</select>
+   
+</div>
+
+<!---------------------------------------------------------------------------------------->
+
+
+<div style="margin: 30px;">
+    <label style="text-align: center;font-size: 25px;">select year of Purcase</label>
+    <br>
+    <select style="margin-top:20px;width: 300px;height: 25px;"name=year1 required==1>
+    
+        {%for year2 in year%}
+
+    <option value="{{year2}}">{{year2}}</option>></option>
+
+    {%endfor%}
+
+    
+    </select>
+
+</div>
+
+
+
+<!---------------------------------------------------------------------------------------->
+
+
+
+<div style="margin: 30px;">
+    <label style="text-align: center;font-size: 25px;" name="kilo_driven;fon" required==1>How much KM driven</label>
+    <br>
+   <center>
+    <input  style="margin-top:20px;width: 300px;height: 30px;" name=kms_driven placeholder="Enter how much KM Driven">
+</center>
+    
+</div>
+
+<!---------------------------------------------------------------------------------------->
+
+
+
+   <center>
+    <button id="button1" name="button1" onclick="send_data()">Predict Price</button>
+
+</center>
+</form>   
+
+<!---------------------------------------------------------------------------------------->
+
+
+<br>
+
+<h2 >Predicted Price is :<span id="prediction"></span> </h2>
+
+
+
+<!---------------------------------------------------------------------------------------->
+
+
+</div>
+
+
+</div>
+
+
+<!-------------------------------------------------------------------------------------->
+<!-------------------------------------------------------------------------------------->
+
+
+<script>
+
+function load_car_models(company_id,car_models){
+
+var company1=document.getElementById(company_id);
+var car_model1=document.getElementById(car_models);
+
+car_model1.value="";
+ car_model1.innerHTML="";
+
+        {% for company in companies %}
+            if( company1.value == "{{ company }}")
+            {
+                {% for model2 in model %}
+                    {% if company in model2 %}
+
+                        var newOption= document.createElement("option");
+                        newOption.value="{{ model2}}";
+                        newOption.innerHTML="{{ model2 }}";
+                        car_model1.options.add(newOption);
+                    {% endif %}
+                {% endfor %}
+            }
+        {% endfor %}
+        }
+        function form_handler(event) {
+        event.preventDefault(); 
+    }
+
+    function send_data()
+    {
+         // Get the form data
+  const form = document.getElementById("Modelform");
+  const formData = new FormData(form);
+
+  // Send the form data to the Flask route
+  fetch("/predict", {
+    method: "POST",
+    body: formData
+  })
+
+
+  .then(response => response.text())
+
+
+  .then(data => {
+   
+   document.getElementById("prediction").innerText=data;
+  })
+  
+  
+  .catch(error => {
+    console.error(error);
+  });
+
+
+}
+</script>
+
+<!------------------------------------------------------------------------------------>
+<!------------------------------------------------------------------------------------>
+
+</body>
+</html>
